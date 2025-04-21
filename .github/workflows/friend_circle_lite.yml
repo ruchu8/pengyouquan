@@ -81,12 +81,15 @@ jobs:
     name: Keepalive Workflow
     runs-on: ubuntu-latest
     permissions:
-      actions: write
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Keepalive
-        uses: gautamkrishnar/keepalive-workflow@v2
-        with:
-          committer_username: "github-actions[bot]"
-          committer_email: "github-actions[bot]@users.noreply.github.com"
+
+      - name: Keepalive Commit
+        run: |
+          echo "Keepalive commit to prevent repository from being archived"
+          touch keepalive.txt
+          git add keepalive.txt
+          git commit -m "Keepalive: $(date +"%Y年%m月%d日-%H时%M分")"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
